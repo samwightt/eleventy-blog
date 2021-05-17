@@ -27,36 +27,42 @@
  * or the comments at the end of the `CSP` const below.
  */
 
-const SELF = quote("self");
+const SELF = quote('self')
 
 const CSP = {
   regular: serialize([
     // By default only talk to same-origin
-    ["default-src", SELF],
+    ['default-src', SELF],
     // No plugins
-    ["object-src", quote("none")],
+    ['object-src', quote('none')],
     // Script from same-origin and inline-hashes.
-    ["script-src", SELF, /* Replaced by csp.js plugin */ "HASHES"],
+    [
+      'script-src',
+      SELF,
+      /* Replaced by csp.js plugin */ 'HASHES',
+      'use.typekit.net'
+    ],
     // Inline CSS is allowed.
-    ["style-src", quote("unsafe-inline")],
+    ['style-src', quote('unsafe-inline'), 'use.typekit.net', 'p.typekit.net'],
     // Images may also come from data-URIs.
-    ["img-src", SELF, "data:"],
+    ['img-src', SELF, 'data:', 'p.typekit.net'],
+    ['font-src', SELF, 'data://*', 'use.typekit.net']
 
     // To add new rules, add new array literals here or extend those above with
     // additional allowed elements.
     // Example for allowing YouTube iframe embeds
     // ['frame-src', 'https://www.youtube.com/embed/']
-  ]),
-};
+  ])
+}
 
 // Quotes CSP "keywords" like `none` or `self`. This function does very little
 // but reads better than the inlined contents because of the nested quotes.
-function quote(str) {
-  return `'${str}'`;
+function quote (str) {
+  return `'${str}'`
 }
 
-function serialize(csp) {
-  return csp.map((src) => src.join(" ")).join(";");
+function serialize (csp) {
+  return csp.map(src => src.join(' ')).join(';')
 }
 
-module.exports = () => CSP;
+module.exports = () => CSP
